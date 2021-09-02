@@ -6,6 +6,6 @@ const loginRoutes = express.Router();
 loginRoutes
   .route('/')
   .get(loginController.getTest)
-  .post(loginController.postTest)
+  .post(loginController.auth)
 
 module.exports = loginRoutes;
