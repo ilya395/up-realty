@@ -1,0 +1,34 @@
+{
+  "name": "up-realty",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "server-start": "concurrently \"npm run client-start\" \"nodemon index.js\"",
+    "server-build": "concurrently \"npm run client-build\" \"node index.js\"",
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "client-start": "npm run start --prefix client",
+    "client-build": "npm run build --prefix client"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-handlebars": "^5.3.2",
+    "express-session": "^1.17.2",
+    "hbs": "^4.1.2",
+    "nodemon": "^2.0.7",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "pg": "^8.6.0"
+  },
+  "devDependencies": {
+    "concurrently": "^6.2.1"
+  }
+}
