@@ -24,20 +24,24 @@ const app = () => {
     const users = await Users.findAll({raw:true});
 
     if (req.headers.authorization) {
-      await jwt.verify(
+      return await jwt.verify(
         req.headers.authorization.split(' ')[1],
         TOKEN_KEY,
-        (err, payload) => {
-          if (err) next()
+        async (err, payload) => {
+          if (err) {
+            await next()
+          }
           else if (payload) {
             for (let user of users) {
               if (user.id === payload.id) {
                 req.user = user
-                next()
+                await next()
               }
             }
 
-            if (!req.user) next()
+            if (!req.user) {
+              await next()
+            }
           }
         }
       );

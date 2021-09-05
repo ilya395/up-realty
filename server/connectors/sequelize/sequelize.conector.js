@@ -22,4 +22,16 @@ const sequelize = new Sequelize(
 
 // sequelize.sync()
 
-module.exports = sequelize;
+module.exports = new Sequelize(
+  DB_NAME,
+  DB_USER,
+  DB_PASSWORD,
+  {
+    dialect: 'postgres',
+    host: DB_HOST,
+    port: DB_PORT,
+    define: {
+      timestamps: false
+    }
+  }
+);
