@@ -3,11 +3,11 @@ const webpack = require('webpack');
 const path  = require('path')
 const HTMLWebpackPlugin = require('html-webpack-plugin') // работай с html
 const { CleanWebpackPlugin } = require('clean-webpack-plugin') // очистка кеша
-const CopyWebpackPlugin = require('copy-webpack-plugin') // копируй-перетаскивай
+// const CopyWebpackPlugin = require('copy-webpack-plugin') // копируй-перетаскивай
 const MiniCssExtractPlugin = require('mini-css-extract-plugin') // работай с css (вставляй стили в файл css)
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin') // минифицируй css
 const TerserWebpackPlugin = require('terser-webpack-plugin') // минифицируй js
-const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin') // через него прикрутить externals с массивом объектов, содержащих урлы с cdn библтотек
+// const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin') // через него прикрутить externals с массивом объектов, содержащих урлы с cdn библтотек
 const Dotenv = require('dotenv-webpack');
 
 const isDev = process.env.NODE_ENV === 'development' // определяй в каком сейчас режиме
@@ -36,11 +36,7 @@ const cssLoaders  = (extra) => {
     const loaders = [
         {
             loader: MiniCssExtractPlugin.loader,
-            options: { // ?
-                // hrm: isDev, // hot module replacement // изменяй определенные сущности без перезагрузки страницы
-                // reloadAll: true,
-                // publicPath: '../../'
-            },
+            options: {},
         },
         'css-loader',
         // 'postcss-loader',
@@ -105,14 +101,6 @@ const plugins = () => {
             inject: true,
         }),
         new CleanWebpackPlugin(),
-        // new CopyWebpackPlugin({
-        //     patterns: [
-        //         {
-        //             from: path.resolve(__dirname, './src/assets/js/utils/*'),
-        //             to: path.resolve(__dirname, './dist/')
-        //         },
-        //     ]
-        // }),
         new MiniCssExtractPlugin({
             filename: 'assets/css/' + filename('css') // filename('css') // 'assets/css/' + filename('css')
         }),
@@ -124,17 +112,14 @@ const plugins = () => {
 
 //
 module.exports = {
-    context: path.resolve(__dirname, 'src'), // со всех путях  удаляю эту папку
+    context: path.resolve(__dirname, 'client/src'), // со всех путях  удаляю эту папку
     mode: 'development',
     entry: { // точка входа в приложение, откуда начать
         script: ['@babel/polyfill', './index.js'],
-        // style: './assets/sass/style.scss',
-        // 'assets/js/index': ['@babel/polyfill', './assets/js/index.js'],
-        // 'assets/css/style': './assets/sass/style.scss'
     },
     output: { // куда складывать результаты работы
         filename: 'assets/js/' + filename('js'), // filename('js'), // 'assets/js/' + filename('js'), // '[name]' // '[name].[hash].js', // итоговый файл, после сборкивсех js файлов
-        path: path.resolve(__dirname, 'dist'), // отталкиваясь от текущей директории, складывать все в dist
+        path: path.resolve(__dirname, 'client/dist'), // отталкиваясь от текущей директории, складывать все в dist
         publicPath: '/' // относительная ссылка, которая будет подставляться из браузера
     },
     resolve: {
@@ -155,10 +140,8 @@ module.exports = {
           '/api': 'http://localhost:7000',
         }
     },
-    devtool: isDev ? 'source-map' : '',
-    externals: {
-        // jquery: 'jQuery'
-    },
+    devtool: isDev ? 'source-map' : 'eval',
+    externals: {},
     plugins: plugins(),
     module: {
         rules: [
@@ -177,33 +160,8 @@ module.exports = {
                         loader: 'file-loader',
                         options: {
                             name: '[path][name].[ext]',
-                            // publicPath: 'src/assets/images/', // ? src/assets/images/
-                            // outputPath: '/images/',
-                            // useRelativePath: true
                         }
                     },
-                    // {
-                    //     loader: 'image-webpack-loader',
-                    //     options: {
-                    //         mozjpeg: {
-                    //             progressive: true,
-                    //             quality: 65
-                    //         },
-                    //         optipng: {
-                    //             optimizationLevel: 7,
-                    //         },
-                    //         pngquant: {
-                    //             quality: [0.65, 0.90],
-                    //             speed: 4
-                    //         },
-                    //         gifsicle: {
-                    //             interlaced: false,
-                    //         },
-                    //         webp: {
-                    //             quality: 75
-                    //         }
-                    //     }
-                    // }
                 ]
             },
             {
@@ -230,37 +188,21 @@ module.exports = {
             },
             {
                 test: /\.json$/,
-                // loader: 'json-loader',
                 use: [
                     'json-loader',
-                    // {
-                    //     loader: 'file-loader',
-                    //     options: {
-                    //         name: '[path][name].[ext]',
-                    //         publicPath: '../../',
-                    //     }
-                    // },
                 ],
                 type: 'javascript/auto'
             },
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                // include: path.resolve(__dirname, 'src/js'), // ?
                 use: jsLoaders()
             },
             {
                 test: /\.html$/,
                 include: path.resolve(__dirname, 'src/assets/templates'),
-                // use: ['raw-loader'], // html-loader // raw-loader
                 use: [
                     'raw-loader',
-                    // {
-                    //     loader: 'html-loader',
-                    //     options: {
-                    //         minimize: false,
-                    //     }
-                    // }
                 ]
             },
         ]
