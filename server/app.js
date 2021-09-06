@@ -1,5 +1,8 @@
 const express = require("express");
 
+const fs = require( 'fs' );
+const path = require( 'path' );
+
 const bodyParser = require('body-parser');
 
 const apiRoutes = require("./routes/index");
@@ -7,6 +10,9 @@ const { HOST, PORT, TOKEN_KEY } = require("./constants");
 const jwt = require('jsonwebtoken');
 const sequelize = require("./connectors/sequelize/sequelize.conector");
 const { Users } = require("./components/users");
+
+const React = require( 'react' );
+const ReactDOMServer = require( 'react-dom/server' );
 
 const app = () => {
   // создаем объект приложения
@@ -18,6 +24,8 @@ const app = () => {
 
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+
+  const { App } = require( '../client/src/App' );
 
   // для проверки jwt
   app.use(async (req, res, next) => {
@@ -50,6 +58,9 @@ const app = () => {
     await next();
   })
 
+  // обслуживание статических ресурсов
+  app.get( /\.(js|css|map|ico)$/, express.static( path.resolve( __dirname, '../client/dist' ) ) );
+
   // app.use(
   //   cors({
   //     credentials: true,
@@ -59,6 +70,29 @@ const app = () => {
   // );
 
   app.use('/api', apiRoutes);
+
+  app.use( '*', ( req, res ) => {
+    // читаем файл `index.html`
+    let indexHTML = fs.readFileSync( path.resolve( __dirname, '../client/dist/index.html' ), {
+        encoding: 'utf8',
+    } );
+
+    // получаем HTML строку из компонента 'App'
+    let appHTML = ReactDOMServer.renderToString( App );
+
+    console.log(appHTML)
+
+    // заполняем элемент '#app' содержимым из 'appHTML'
+    indexHTML = indexHTML.replace( '&lt;div id=&quot;root&quot;&gt;&lt;/div&gt;', `&lt;div id=&quot;root&quot;&gt;${ appHTML }&lt;/div&gt;` );
+
+
+    // устанавливаем заголовок и статус
+    res.contentType( 'text/html' );
+    res.status( 200 );
+
+    return res.send( indexHTML );
+
+  });
 
   // определяем обработчик для маршрута "/"
   // app.get("/", function(request, response){

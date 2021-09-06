@@ -1,6 +1,6 @@
 const { Users } = require("../../users");
 const sequelize = require("../../../connectors/sequelize/sequelize.conector");
-const hash = require("../../../utils");
+const { hash } = require("../../../utils");
 const jwt = require('jsonwebtoken');
 const { TOKEN_KEY } = require("../../../constants");
 
@@ -25,7 +25,7 @@ class LoginController {
         return res.status(200).json({
           id: user.id,
           login: user.login,
-          token: jwt.sign({ id: user.id }, TOKEN_KEY),
+          token: jwt.sign({ id: user.id }, TOKEN_KEY, { expiresIn: '1800s' }),
         })
       }
     }

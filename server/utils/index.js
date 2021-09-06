@@ -7,4 +7,13 @@ function hash(text) {
     .digest('base64')
 }
 
-module.exports = hash;
+function getSecretRow() {
+  return crypto
+    .randomBytes(64)
+    .toString('hex')
+}
+
+module.exports = {
+  hash,
+  getSecretRow
+};

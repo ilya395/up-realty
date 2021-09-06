@@ -155,7 +155,7 @@ module.exports = {
           '/api': 'http://localhost:7000',
         }
     },
-    devtool: isDev ? 'source-map' : '',
+    devtool: isDev ? 'source-map' : 'eval',
     externals: {
         // jquery: 'jQuery'
     },
