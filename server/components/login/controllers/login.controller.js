@@ -25,7 +25,11 @@ class LoginController {
         return res.status(200).json({
           id: user.id,
           login: user.login,
-          token: jwt.sign({ id: user.id }, TOKEN_KEY),
+          token: jwt.sign(
+            { id: user.id },
+            TOKEN_KEY,
+            // { expiresIn: '1800s' }
+          ),
         })
       }
     }

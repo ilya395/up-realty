@@ -27,6 +27,7 @@ const app = () => {
 
   // для проверки jwt
   app.use(async (req, res, next) => {
+
     const users = await Users.findAll({raw:true});
 
     if (req.headers.authorization) {
@@ -83,17 +84,6 @@ const app = () => {
       });
     }
   });
-
-  // определяем обработчик для маршрута "/"
-  // app.get("/", function(request, response){
-  //     // отправляем ответ
-  //     response.send("<h2>Привет Express!</h2>");
-  // });
-
-  // начинаем прослушивать подключения на 3000 порту
-  // app.listen(PORT, () => {
-  //   console.log(`Server listens http://${HOST}:${PORT}`)
-  // });
 
   // синхронизация с бд, после успшной синхронизации запускаем сервер
   sequelize.sync().then(()=>{
