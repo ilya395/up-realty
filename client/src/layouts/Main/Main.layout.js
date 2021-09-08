@@ -34,6 +34,9 @@ export const Main = (props) => {
       </main>
       <DialogPopup
         title={'Вы действительно хотите удалить этот объект?'}
+        callback={() => dispatch()}
+      />
+      <ObjectPopup
       />
       <AdderNewObject />
       <Footer />

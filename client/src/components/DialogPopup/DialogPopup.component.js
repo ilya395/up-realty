@@ -5,7 +5,7 @@ import "./DialogPopup.component.scss";
 
 export const DialogPopup = props => {
 
-  const { title, isOpen = false, saveMode = false, callback = false } = props;
+  const { title, isOpen = false, saveMode = false, callback = null } = props;
 
   const dispatch = useDispatch();
 
