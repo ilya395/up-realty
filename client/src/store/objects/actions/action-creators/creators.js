@@ -1,8 +1,13 @@
-import { GET_OBJECTS, ADD_OBJECT, EDIT_OBJECT, DELETE_OBJECT, ERROR_OBJECT, AWAIT_OBJECT } from "../types/actions.type";
+import { GET_OBJECTS, ADD_OBJECT, EDIT_OBJECT, DELETE_OBJECT, ERROR_OBJECT, AWAIT_OBJECT, GET_OBJECT } from "../types/actions.type";
 
 export const getObjects = payload => ({
   type: GET_OBJECTS,
   payload
+});
+
+export const getObject = id => ({
+  type: GET_OBJECT,
+  payload: id
 });
 
 export const addObject = payload => ({

@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { dialogPopupIsVisibleAction } from "../../store/dialogPopup/actions/action-creators/dialogPopup.action-creator";
+import { objectPopupIsVisibleAction } from "../../store/ObjectPopup";
 
 export const TableRow = props => {
 
@@ -11,10 +12,12 @@ export const TableRow = props => {
   const { id, number, square, statusName } = data;
 
   const deleteHandler = () => {
-    dispatch(dialogPopupIsVisibleAction())
+    dispatch(dialogPopupIsVisibleAction(id))
   }
 
-  const editHandler = () => {}
+  const editHandler = () => {
+    dispatch(objectPopupIsVisibleAction(id));
+  }
 
   return (
     <tr>
@@ -22,7 +25,7 @@ export const TableRow = props => {
       <td>{square}</td>
       <td>{statusName}</td>
       <td className="table-section__buttons-cell">
-        <button className="waves-effect waves-light btn">
+        <button className="waves-effect waves-light btn" onClick={editHandler}>
           <i className="material-icons">edit</i>
         </button>
         <button className="waves-effect waves-light btn" onClick={deleteHandler}>

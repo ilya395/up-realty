@@ -23,7 +23,7 @@ export default function StatusesReducer(state = initialStatusesState, action) {
 
     case GET_STATUSES:
       return {
-        statuses: [...action.payload],
+        statuses: [...action.payload.data],
         error: false,
         await: false
       }

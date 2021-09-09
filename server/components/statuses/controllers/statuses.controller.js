@@ -1,4 +1,4 @@
-const { Statuses } = require("../models/statuses.model");
+const Statuses = require("../models/statuses.model");
 
 class StatusesController {
   async getStatuses(req, res) {

@@ -1,6 +1,6 @@
 import { OBJECT_POPUP_AWAIT_REQUEST, OBJECT_POPUP_ERROR_REQUEST, OBJECT_POPUP_IS_NOT_VISIBLE, OBJECT_POPUP_IS_VISIBLE, OBJECT_POPUP_SUCCESS_REQUEST } from "../types/objectPopup.type";
 
-export const objectPopupIsVisibleAction = id => ({
+export const objectPopupIsVisibleAction = (id = null) => ({
   type: OBJECT_POPUP_IS_VISIBLE,
   payload: id
 });

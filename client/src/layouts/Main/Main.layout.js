@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { AdderNewObject, DialogPopup, Table } from "../../components";
-import { requestGetObjects } from "../../sagas/objects";
+import { AdderNewObject, DialogPopup, ObjectPopup, Table } from "../../components";
+import { requestDeleteObject, requestGetObjects } from "../../sagas/objects";
 import { Footer } from "../Footer/Footer.layout";
 import { Header } from "../Header/Header.layout";
 
@@ -34,7 +34,7 @@ export const Main = (props) => {
       </main>
       <DialogPopup
         title={'Вы действительно хотите удалить этот объект?'}
-        callback={() => dispatch()}
+        callback={(id) => dispatch(requestDeleteObject(id))}
       />
       <ObjectPopup
       />

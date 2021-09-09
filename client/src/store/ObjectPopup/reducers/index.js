@@ -14,13 +14,15 @@ export default function ObjectPopupReducer(state = initialObjectPopupState, acti
     case OBJECT_POPUP_IS_VISIBLE:
       return {
         ...state,
-        isVisible: true
+        isVisible: true,
+        editing: action.payload ? action.payload : false,
       }
 
     case OBJECT_POPUP_IS_NOT_VISIBLE:
       return {
         ...state,
-        isVisible: false
+        isVisible: false,
+        editing: false,
       }
 
     case OBJECT_POPUP_AWAIT_REQUEST:
@@ -28,7 +30,6 @@ export default function ObjectPopupReducer(state = initialObjectPopupState, acti
         ...state,
         await: true,
         error: false,
-        editing: false,
       }
 
     case OBJECT_POPUP_ERROR_REQUEST:
@@ -36,7 +37,6 @@ export default function ObjectPopupReducer(state = initialObjectPopupState, acti
         ...state,
         await: false,
         error: action.payload,
-        editing: false,
       }
 
     default:

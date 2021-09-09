@@ -1,11 +1,11 @@
 import { call, put, takeEvery, delay } from 'redux-saga/effects';
-import { URL_TO_OBJECTS } from '../../../../constants';
-import { REQUEST_GET_OBJECTS, REQUEST_GET_STATUSES } from '../../actions';
-import { awaitMoveObject, errorMoveObject, getObjects } from '../../../../store/objects';
+import { URL_TO_STATUSES } from '../../../../constants';
+import { REQUEST_GET_STATUSES } from '../../actions';
 import { getToken, removeToken } from '../../../../utils/token';
 import { awaitStatusesAction, errorStatusesAction, getStatusesAction } from '../../../../store/statuses';
 
 function* fetchGetStatuses() {
+  console.log("fetchGetStatuses")
   try {
     yield put(awaitStatusesAction()); // тут меняется состояние на ожидание
     // достань данные

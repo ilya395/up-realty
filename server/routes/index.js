@@ -8,6 +8,6 @@ const apiRoutes = express.Router();
 apiRoutes
   .use("/login", loginRoutes)
   .use("/objects", objectsRoutes)
-  .use("/statises", statusesRoutes)
+  .use("/statuses", statusesRoutes)
 
 module.exports = apiRoutes;
