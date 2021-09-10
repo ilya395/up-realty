@@ -80,7 +80,7 @@ class ObjectsController {
       const data = {};
       square ? (data.square = +square) : false;
       number ? (data.number = +number) : false;
-      statusId ? (data.statusId = +statusId) : false;
+      statusId ? (data.status_id = +statusId) : false;
       const object = await Objects.update({ ...data }, {
         where: {
           id: +id

@@ -16,8 +16,6 @@ export const DialogPopup = props => {
   useEffect(() => {
     const { isVisible } = state;
     setOpen(isVisible);
-
-    console.log(state)
   }, [state]);
 
   const closeHandler = () => {
@@ -26,7 +24,6 @@ export const DialogPopup = props => {
   };
 
   const callbackHandler = () => {
-    console.log(state.checked)
     if (callback) {
       callback(state.checked);
     }

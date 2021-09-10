@@ -5,7 +5,6 @@ import { getToken, removeToken } from '../../../../utils/token';
 import { awaitStatusesAction, errorStatusesAction, getStatusesAction } from '../../../../store/statuses';
 
 function* fetchGetStatuses() {
-  console.log("fetchGetStatuses")
   try {
     yield put(awaitStatusesAction()); // тут меняется состояние на ожидание
     // достань данные

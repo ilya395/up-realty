@@ -1,4 +1,4 @@
-import { ADD_OBJECT, AWAIT_OBJECT, DELETE_OBJECT, EDIT_OBJECT, ERROR_OBJECT, GET_OBJECTS, GET_OBJECT } from "../actions";
+import { ADD_OBJECT, AWAIT_OBJECT, DELETE_OBJECT, EDIT_OBJECT, ERROR_OBJECT, GET_OBJECTS, GET_OBJECT, DROP_OBJECT } from "../actions";
 
 export const initialObjectsState = {
   objects: [],
@@ -49,7 +49,6 @@ export default function ObjectsReducer(state, action) {
       }
 
     case GET_OBJECTS:
-      console.log("GET_OBJECTS: ", action.payload)
       return {
         ...state,
         error: false,
@@ -63,6 +62,14 @@ export default function ObjectsReducer(state, action) {
         error: false,
         await: false,
         checked: state.objects.find(item => +item.id === +action.payload.id)
+      }
+
+    case DROP_OBJECT:
+      return {
+        ...state,
+        error: false,
+        await: false,
+        checked: null
       }
 
     default:

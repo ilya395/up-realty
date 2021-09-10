@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { requestAddObject, requestEditeObject } from "../../sagas/objects/actions";
 import { requestGetStatuses } from "../../sagas/statuses";
 import { objectPopupIsNotVisibleAction } from "../../store/ObjectPopup";
-import { getObject } from "../../store/objects";
+import { dropObject, getObject } from "../../store/objects";
 import "./ObjectPopup.component.scss";
 
 export const ObjectPopup = props => {
@@ -24,13 +25,9 @@ export const ObjectPopup = props => {
     const { checked } = stateObjects;
     setOpen(isVisible);
     setEditingMode(editing);
-    console.log(checked, editing)
     checked ?
       setObjectData(checked):
       false;
-    // setObjectData(() => {
-    //   return stateObjects.objects.find(item => +item.id === +editingMode)
-    // });
   }, [stateObjectPopup]);
   useEffect(() => {
     editingMode ?
@@ -53,21 +50,28 @@ export const ObjectPopup = props => {
   const closeHandler = () => {
     setOpen(false)
     dispatch(objectPopupIsNotVisibleAction());
+    dispatch(dropObject());
+    setObjectData(null)
   };
 
   const callbackHandler = () => {
-    if (callback) {
-      callback();
+    if (objectData && !objectData.statusId) {
+      objectData.statusId = statusesList[0].id;
     }
+    const { checked } = stateObjects;
+    checked ?
+      dispatch(requestEditeObject(objectData)) :
+      dispatch(requestAddObject(objectData))
     closeHandler();
   }
 
   const changeInput = event => {
     const target = event.target;
-    setObjectData({
+    const obj = {
       ...objectData,
-      [target.name]: target.value
-    });
+      [target.name]: +target.value
+    };
+    setObjectData(obj);
   }
 
   if (!open) {
@@ -89,7 +93,7 @@ export const ObjectPopup = props => {
             <div className="form-container">
               <form id="form" name="form">
                 <div className="input-field">
-                  <select name="status_id" value={objectData ? objectData.status_id : (statusesList ? statusesList[0].id : "")} onChange={changeInput}>
+                  <select name="statusId" value={objectData ? objectData.status_id : (statusesList ? statusesList[0].id : "")} onChange={changeInput}>
                     {
                       statusesList ?
                         statusesList.map(item => <option value={item.id} key={item.id}>{item.name}</option>) :

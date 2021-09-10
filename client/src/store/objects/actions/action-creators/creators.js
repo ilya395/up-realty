@@ -1,4 +1,4 @@
-import { GET_OBJECTS, ADD_OBJECT, EDIT_OBJECT, DELETE_OBJECT, ERROR_OBJECT, AWAIT_OBJECT, GET_OBJECT } from "../types/actions.type";
+import { GET_OBJECTS, ADD_OBJECT, EDIT_OBJECT, DELETE_OBJECT, ERROR_OBJECT, AWAIT_OBJECT, GET_OBJECT, DROP_OBJECT } from "../types/actions.type";
 
 export const getObjects = payload => ({
   type: GET_OBJECTS,
@@ -32,4 +32,8 @@ export const errorMoveObject = payload => ({
 
 export const awaitMoveObject = () => ({
   type: AWAIT_OBJECT
+});
+
+export const dropObject = () => ({
+  type: DROP_OBJECT
 })
