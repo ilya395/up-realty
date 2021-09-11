@@ -1,5 +1,6 @@
 const Objects = require("../models/objects.model");
 const { Statuses } = require("../../statuses");
+const { checkNumbers } = require("../../../validate");
 
 class ObjectsController {
 
@@ -45,7 +46,7 @@ class ObjectsController {
         });
       }
       const { square, number, statusId } = req.body;
-      if (square && number && statusId) {
+      if (checkNumbers(square) && checkNumbers(number) && checkNumbers(statusId)) {
         const object = await Objects.create({
           square,
           number,
@@ -61,6 +62,10 @@ class ObjectsController {
           massage: "Can't create new object",
           status: "NOT"
         });
+      } else {
+        return res
+          .status(400)
+          .json({ message: 'Bad data' });
       }
     }
     return res
@@ -77,19 +82,26 @@ class ObjectsController {
         });
       }
       const { square, number, statusId, id } = req.body;
-      const data = {};
-      square ? (data.square = +square) : false;
-      number ? (data.number = +number) : false;
-      statusId ? (data.status_id = +statusId) : false;
-      const object = await Objects.update({ ...data }, {
-        where: {
-          id: +id
+      if (checkNumbers(square) && checkNumbers(number) && checkNumbers(statusId)) {
+        const data = {};
+        square ? (data.square = +square) : false;
+        number ? (data.number = +number) : false;
+        statusId ? (data.status_id = +statusId) : false;
+        const object = await Objects.update({ ...data }, {
+          where: {
+            id: +id
+          }
+        });
+        if (object) {
+          return res.status(200).json({
+            data: object,
+            status: "OK"
+          });
         }
-      });
-      if (object) {
-        return res.status(200).json({
-          data: object,
-          status: "OK"
+      } else {
+        return res.status(400).json({
+          massage: "Bad data",
+          status: "NOT"
         });
       }
       return res.status(400).json({
@@ -111,7 +123,7 @@ class ObjectsController {
         });
       }
       const { id } = req.body;
-      if (id) {
+      if (checkNumbers(id)) {
         const object = await Objects.destroy({
           where: {
             id

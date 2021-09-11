@@ -26,7 +26,10 @@ export const ObjectPopup = props => {
     setOpen(isVisible);
     setEditingMode(editing);
     checked ?
-      setObjectData(checked):
+      setObjectData({
+        ...checked,
+        statusId: checked.status_id
+      }):
       false;
   }, [stateObjectPopup]);
   useEffect(() => {
@@ -93,7 +96,7 @@ export const ObjectPopup = props => {
             <div className="form-container">
               <form id="form" name="form">
                 <div className="input-field">
-                  <select name="statusId" value={objectData ? objectData.status_id : (statusesList ? statusesList[0].id : "")} onChange={changeInput}>
+                  <select name="statusId" value={objectData ? objectData.statusId : (statusesList ? statusesList[0].id : "")} onChange={changeInput}>
                     {
                       statusesList ?
                         statusesList.map(item => <option value={item.id} key={item.id}>{item.name}</option>) :
@@ -107,7 +110,7 @@ export const ObjectPopup = props => {
                   <label htmlFor="number" className="active">Number</label>
                 </div>
                 <div className="input-field">
-                  <input id="square" name="square" type="number" className="validate" required value={objectData ? objectData.square : ""} onChange={changeInput} />
+                  <input id="square" name="square" type="number" className="validate"  step="0.1" required value={objectData ? objectData.square : ""} onChange={changeInput} />
                   <label htmlFor="square" className="active">Square</label>
                 </div>
               </form>
