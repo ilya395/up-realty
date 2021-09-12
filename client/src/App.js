@@ -3,16 +3,13 @@ import cn from 'classnames';
 import s from './App.scss';
 import { Router, BrowserRouter } from 'react-router-dom';
 import { MainRoter } from './routes';
+import { Loader } from './components';
 
 const App = () => {
-  useEffect(async () => {
-    const req = await fetch("/api/login");
-    const data = await req.json();
-    await console.log(data)
-  });
 
   return (
     <>
+      <Loader />
       <BrowserRouter>
         <MainRoter />
       </BrowserRouter>
