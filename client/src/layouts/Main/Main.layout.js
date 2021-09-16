@@ -1,55 +1,44 @@
-import React from "react";
-import { AdderNewObject } from "../../components";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { AdderNewObject, DialogPopup, Loader, ObjectPopup, Table } from "../../components";
+import { requestDeleteObject, requestGetObjects } from "../../sagas/objects";
 import { Footer } from "../Footer/Footer.layout";
 import { Header } from "../Header/Header.layout";
 
-export const Main = () => {
+export const Main = (props) => {
+  const dispatch = useDispatch();
+  const objectsState = useSelector(state => state.objectsReducer);
+
+  const [allObjects, setAllObjects] = useState([]);
+
+  useEffect(() => {
+    dispatch(requestGetObjects());
+  }, []);
+
+  useEffect(() => {
+    const { objects } = objectsState;
+    setAllObjects(objects);
+  }, [objectsState]);
+
   return (
     <>
+      <Loader />
       <Header />
       <main className="main-section">
         <section className="table-section container">
           <div className="row">
             <div className="col s12">
-            {/* {{#if visible}} */}
-              <table className="responsive-table">
-                <thead>
-                  <tr>
-                      <th>Number</th>
-                      <th>Square, m<sup>2</sup></th>
-                      <th>Status</th>
-                      <th></th>
-                  </tr>
-                </thead>
-
-                <tbody id="table-body">
-
-
-                {/* {{#each objects}}
-                  <tr data-row="{{this.id}}">
-                    <td>{{this.number}}</td>
-                    <td>{{this.square}}</td>
-                    <td>{{this.status}}</td>
-                    <td className="table-section__buttons-cell">
-                      <button className="waves-effect waves-light btn" data-object="edit" data-id="{{this.id}}">
-                        <i className="material-icons">edit</i>
-                      </button>
-                      <button className="waves-effect waves-light btn" data-object="delete" data-id="{{this.id}}">
-                        <i className="material-icons">delete</i>
-                      </button>
-                    </td>
-                  </tr>
-                {{/each}} */}
-
-                </tbody>
-              </table>
-            {/* {{else}} */}
-              <p> Нет данных</p>
-            {/* {{/if}} */}
+              <Table data={allObjects} />
             </div>
           </div>
         </section>
       </main>
+      <DialogPopup
+        title={'Вы действительно хотите удалить этот объект?'}
+        callback={(id) => dispatch(requestDeleteObject(id))}
+      />
+      <ObjectPopup
+      />
       <AdderNewObject />
       <Footer />
     </>

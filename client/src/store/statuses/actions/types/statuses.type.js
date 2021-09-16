@@ -1,0 +1,3 @@
+export const AWAIT_STATUSES = "AWAIT_STATUSES";
+export const ERROR_STATUSES = "ERROR_STATUSES";
+export const GET_STATUSES = "GET_STATUSES";

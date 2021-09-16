@@ -1,4 +1,5 @@
 import React from "react";
+import { Logout } from "../../components";
 
 export const Header = () => {
   return (
@@ -11,7 +12,7 @@ export const Header = () => {
                 Hi, manager!
               </span>
             </div>
-            <button className="waves-effect waves-light btn right" id="logout">Logout</button>
+            <Logout />
           </div>
         </div>
       </div>

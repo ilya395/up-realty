@@ -1,0 +1,16 @@
+.loader-wrap {
+  position: fixed;
+  z-index: 9000;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+
+  & .loader-container {
+    display: block;
+    width: 5rem;
+    height: 5rem;
+  }
+}

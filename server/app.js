@@ -1,3 +1,10 @@
+// require('@babel/register')({
+//   presets: [ "@babel/react" ],
+// });
+// require('@babel/register'); // babel-register
+// игнорируем импорты `.scss`
+// require( 'ignore-styles' );
+
 const express = require("express");
 
 const fs = require( 'fs' );
@@ -11,8 +18,15 @@ const jwt = require('jsonwebtoken');
 const sequelize = require("./connectors/sequelize/sequelize.conector");
 const { Users } = require("./components/users");
 
-const React = require( 'react' );
-const ReactDOMServer = require( 'react-dom/server' );
+const React = require( "react" );
+const ReactDOMServer = require( "react-dom/server" );
+const App = require("../client/src/App").default;
+const { StaticRouter } = require('react-router');
+
+const staticJs = [];
+const staticCss = [];
+
+
 
 const app = () => {
   // создаем объект приложения
@@ -25,10 +39,16 @@ const app = () => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
-  const { App } = require( '../client/src/App' );
+  app.set("view engine", "hbs");
+  app.set("views", "server/views"); // установка пути к представлениям
+
+  // обслуживание статических ресурсов
+  app.get( /\.(js|css|map|ico)$/, express.static( path.resolve( __dirname, '../client/dist' ) ) ); // spa
+  // app.use("/static", express.static(path.resolve( __dirname, '../client/dist' ))); // spa + ssr
 
   // для проверки jwt
   app.use(async (req, res, next) => {
+
     const users = await Users.findAll({raw:true});
 
     if (req.headers.authorization) {
@@ -58,8 +78,17 @@ const app = () => {
     await next();
   })
 
-  // обслуживание статических ресурсов
-  app.get( /\.(js|css|map|ico)$/, express.static( path.resolve( __dirname, '../client/dist' ) ) );
+  // обслуживание статических ресурсов // !
+  fs.readdirSync('./client/dist/assets/js').forEach(file => {
+    if (file.split('.').pop() === 'js') {
+      staticJs.push('/assets/js/' + file)
+    }
+  });
+  fs.readdirSync('./client/dist/assets/css').forEach(file => {
+    if (file.split('.').pop() === 'css') {
+      staticCss.push('/assets/css/' + file)
+    }
+  })
 
   // app.use(
   //   cors({
@@ -71,39 +100,65 @@ const app = () => {
 
   app.use('/api', apiRoutes);
 
-  app.use( '*', ( req, res ) => {
-    // читаем файл `index.html`
-    let indexHTML = fs.readFileSync( path.resolve( __dirname, '../client/dist/index.html' ), {
-        encoding: 'utf8',
-    } );
+  app.use( '*', async ( req, res ) => {
+    // // читаем файл `index.html`
+    // let indexHTML = fs.readFileSync( path.resolve( __dirname, '../client/dist/index.html' ), {
+    //     encoding: 'utf8',
+    // } );
 
-    // получаем HTML строку из компонента 'App'
-    let appHTML = ReactDOMServer.renderToString( App );
+    // // получаем HTML строку из компонента 'App'
+    // let appHTML = ReactDOMServer.renderToString( App );
 
-    console.log(appHTML)
+    // console.log(appHTML)
 
-    // заполняем элемент '#app' содержимым из 'appHTML'
-    indexHTML = indexHTML.replace( '&lt;div id=&quot;root&quot;&gt;&lt;/div&gt;', `&lt;div id=&quot;root&quot;&gt;${ appHTML }&lt;/div&gt;` );
+    // // заполняем элемент '#app' содержимым из 'appHTML'
+    // indexHTML = indexHTML.replace( '&lt;div id=&quot;root&quot;&gt;&lt;/div&gt;', `&lt;div id=&quot;root&quot;&gt;${ appHTML }&lt;/div&gt;` );
 
 
-    // устанавливаем заголовок и статус
-    res.contentType( 'text/html' );
-    res.status( 200 );
+    // // устанавливаем заголовок и статус
+    // res.contentType( 'text/html' );
+    // res.status( 200 );
 
-    return res.send( indexHTML );
+    // return res.send( indexHTML );
 
+    try {
+      const context = {};
+
+      const appComponent = await ReactDOMServer.renderToString(
+        <StaticRouter
+          location={req.url}
+          context={context}
+        >
+          <App />
+        </StaticRouter>
+      ); // renderToString // renderToNodeStream
+      console.log("appComponent: ",appComponent)
+
+      if (context.url) {
+        // Somewhere a `<Redirect>` was rendered
+        // res.redirect(301, context.url);
+        console.log(context.url)
+      } else {
+        // we're good, send the response
+
+        console.log("go")
+      }
+
+      // устанавливаем заголовок и статус
+      res.contentType( 'text/html' );
+      res.status( 200 );
+      return await res.render('index.hbs', {
+        string: appComponent,
+        scripts: staticJs,
+        styles: staticCss,
+      });
+    } catch(e) {
+      return res.status(404).json({
+        massage: "Can't find static files",
+        status: "NOT"
+      });
+    }
   });
-
-  // определяем обработчик для маршрута "/"
-  // app.get("/", function(request, response){
-  //     // отправляем ответ
-  //     response.send("<h2>Привет Express!</h2>");
-  // });
-
-  // начинаем прослушивать подключения на 3000 порту
-  // app.listen(PORT, () => {
-  //   console.log(`Server listens http://${HOST}:${PORT}`)
-  // });
 
   // синхронизация с бд, после успшной синхронизации запускаем сервер
   sequelize.sync().then(()=>{

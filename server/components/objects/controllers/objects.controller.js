@@ -1,5 +1,6 @@
 const Objects = require("../models/objects.model");
 const { Statuses } = require("../../statuses");
+const { checkNumbers } = require("../../../validate");
 
 class ObjectsController {
 
@@ -45,7 +46,7 @@ class ObjectsController {
         });
       }
       const { square, number, statusId } = req.body;
-      if (square && number && statusId) {
+      if (checkNumbers(square) && checkNumbers(number) && checkNumbers(statusId)) {
         const object = await Objects.create({
           square,
           number,
@@ -61,6 +62,10 @@ class ObjectsController {
           massage: "Can't create new object",
           status: "NOT"
         });
+      } else {
+        return res
+          .status(400)
+          .json({ message: 'Bad data' });
       }
     }
     return res
@@ -69,7 +74,6 @@ class ObjectsController {
   }
 
   async updateObject(req, res) {
-    console.log(req.user)
     if (req.user) {
       if(!req.body) {
         return res.status(400).json({
@@ -78,26 +82,72 @@ class ObjectsController {
         });
       }
       const { square, number, statusId, id } = req.body;
-      const data = {};
-      square ? (data.square = +square) : false;
-      number ? (data.number = +number) : false;
-      statusId ? (data.statusId = +statusId) : false;
-      console.log(data)
-      const object = await Objects.update({ ...data }, {
-        where: {
-          id: +id
+      if (checkNumbers(square) && checkNumbers(number) && checkNumbers(statusId)) {
+        const data = {};
+        square ? (data.square = +square) : false;
+        number ? (data.number = +number) : false;
+        statusId ? (data.status_id = +statusId) : false;
+        const object = await Objects.update({ ...data }, {
+          where: {
+            id: +id
+          }
+        });
+        if (object) {
+          return res.status(200).json({
+            data: object,
+            status: "OK"
+          });
         }
-      });
-      if (object) {
-        return res.status(200).json({
-          data: object,
-          status: "OK"
+      } else {
+        return res.status(400).json({
+          massage: "Bad data",
+          status: "NOT"
         });
       }
       return res.status(400).json({
         massage: "Can't update this object",
         status: "NOT"
       });
+    }
+    return res
+      .status(401)
+      .json({ message: 'Not authorized' });
+  }
+
+  async updateObject(req, res) {
+    if (req.user) {
+      if(!req.body) {
+        return res.status(400).json({
+          massage: "Something error",
+          status: "NOT"
+        });
+      }
+      const { square, number, statusId, id } = req.body;
+      if (checkNumbers(+square) && checkNumbers(+number) && checkNumbers(+statusId) && checkNumbers(+id)) {
+        const data = {};
+        square ? (data.square = +square) : false;
+        number ? (data.number = +number) : false;
+        statusId ? (data.statusId = +statusId) : false;
+        console.log(data)
+        const object = await Objects.update({ ...data }, {
+          where: {
+            id: +id
+          }
+        });
+        if (object) {
+          return res.status(200).json({
+            data: object,
+            status: "OK"
+          });
+        }
+        return res.status(400).json({
+          massage: "Can't update this object",
+          status: "NOT"
+        });
+      }
+      return res
+        .status(400)
+        .json({ message: 'Bad data' });
     }
     return res
       .status(401)
@@ -113,13 +163,12 @@ class ObjectsController {
         });
       }
       const { id } = req.body;
-      if (id) {
+      if (checkNumbers(id)) {
         const object = await Objects.destroy({
           where: {
             id
           }
         });
-        console.log(object)
         if (object) {
           return res.status(200).json({
             data: object,
