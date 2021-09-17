@@ -13,6 +13,31 @@
   <!-- Compiled and minified JavaScript -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
+  <style>
+    .work-area {
+      margin: 0 auto;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .loader-wrap {
+      position: fixed;
+      z-index: 9000;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #fff;
+    }
+    .loader-wrap .loader-container {
+      display: block;
+      width: 5rem;
+      height: 5rem;
+    }
+  </style>
+
   {{#if styles}}
     {{#each styles}}
       <link href="{{this}}" rel="stylesheet">

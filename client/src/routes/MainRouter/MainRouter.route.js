@@ -14,10 +14,35 @@ export const MainRoter = () => {
 
   useEffect(() => {
     setTokenInComponent(getToken());
+  }, []);
+  useEffect(() => {
+    setTokenInComponent(getToken());
   }, [state]);
+
+  if (!tokenInComponent) {
+    return (
+      <Switch>
+        <Route
+          path="/login"
+        >
+          <Login />
+        </Route>
+        <Route
+          path="*"
+        >
+          <Login />
+        </Route>
+      </Switch>
+    );
+  }
 
   return (
     <Switch>
+      {/* <PrivateRoute
+        path="/login"
+        auth={true}
+        component={() => (<Login />)}
+      /> */}
       <Route
         path="/login"
       >

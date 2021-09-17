@@ -20,8 +20,6 @@ export const Loader = props => {
 
     const { await: awaitObjectPopup } = stateObjectPopup;
 
-    console.log(awaitObjects, awaitLogin, awaitObjectPopup)
-
     if (awaitObjects || awaitLogin || awaitObjectPopup) {
       setActive(true)
     }

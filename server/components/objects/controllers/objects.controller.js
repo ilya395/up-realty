@@ -128,7 +128,6 @@ class ObjectsController {
         square ? (data.square = +square) : false;
         number ? (data.number = +number) : false;
         statusId ? (data.statusId = +statusId) : false;
-        console.log(data)
         const object = await Objects.update({ ...data }, {
           where: {
             id: +id
