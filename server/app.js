@@ -1,10 +1,3 @@
-// require('@babel/register')({
-//   presets: [ "@babel/react" ],
-// });
-// require('@babel/register'); // babel-register
-// игнорируем импорты `.scss`
-// require( 'ignore-styles' );
-
 const express = require("express");
 
 const fs = require( 'fs' );
@@ -101,26 +94,6 @@ const app = () => {
   app.use('/api', apiRoutes);
 
   app.use( '*', async ( req, res ) => {
-    // // читаем файл `index.html`
-    // let indexHTML = fs.readFileSync( path.resolve( __dirname, '../client/dist/index.html' ), {
-    //     encoding: 'utf8',
-    // } );
-
-    // // получаем HTML строку из компонента 'App'
-    // let appHTML = ReactDOMServer.renderToString( App );
-
-    // console.log(appHTML)
-
-    // // заполняем элемент '#app' содержимым из 'appHTML'
-    // indexHTML = indexHTML.replace( '&lt;div id=&quot;root&quot;&gt;&lt;/div&gt;', `&lt;div id=&quot;root&quot;&gt;${ appHTML }&lt;/div&gt;` );
-
-
-    // // устанавливаем заголовок и статус
-    // res.contentType( 'text/html' );
-    // res.status( 200 );
-
-    // return res.send( indexHTML );
-
     try {
       const context = {};
 
@@ -131,17 +104,12 @@ const app = () => {
         >
           <App />
         </StaticRouter>
-      ); // renderToString // renderToNodeStream
-      console.log("appComponent: ",appComponent)
+      );
 
       if (context.url) {
         // Somewhere a `<Redirect>` was rendered
-        // res.redirect(301, context.url);
+        res.redirect(301, context.url);
         console.log(context.url)
-      } else {
-        // we're good, send the response
-
-        console.log("go")
       }
 
       // устанавливаем заголовок и статус
