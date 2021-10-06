@@ -23,7 +23,13 @@ const app = () => {
   app.use(express.urlencoded({ extended: true }));
 
   // обслуживание статических ресурсов
-  app.get( /\.(js|css|map|ico)$/, express.static( path.resolve( __dirname, '../client/dist' ) ) );
+  app.get(
+    /\.(js|css|map|ico)$/,
+    express.static(
+      // path.resolve( __dirname, '../client/dist' )
+      `${__dirname}/../client/dist`
+    )
+  );
 
   // для проверки jwt
   app.use(async (req, res, next) => {
