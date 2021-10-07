@@ -95,6 +95,7 @@ const plugins = () => {
         new HTMLWebpackPlugin({
             filename: 'index.html',
             template: './templates/index.html',
+            baseUrl: process.env.NODE_ENV === 'development'? '/' : '/up-realty/',
             minify: {
                 collapseWhitespace: !isProd
             },
